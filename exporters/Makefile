@@ -1,4 +1,7 @@
-PWD = $(shell pwd)
+PWD                   = $(shell pwd)
+NODE_EXPORTER_VERSION = $(or $(shell printenv NODE_EXPORTER_VERSION), "")
+KUBE_STATE_METRICS    = $(or $(shell printenv KUBE_STATE_METRICS), "")
+
 
 .PHONY: build
 build: kube-state-metrics prometheus-node-exporter
@@ -11,12 +14,12 @@ kustomize-kube-state-metrics: kube-state-metrics-template kube-state-metrics-kus
 
 .PHONY: kube-state-metrics-template
 kube-state-metrics-template:
-	helm template kube-state-metrics stable/kube-state-metrics --output-dir .
+	helm template kube-state-metrics stable/kube-state-metrics --version=${KUBE_STATE_METRICS} --output-dir .
 
 .PHONY: vanilla-kube-state-metrics
 vanilla-kube-state-metrics:
 	@mkdir -p vanillas
-	helm template kube-state-metrics stable/kube-state-metrics > vanillas/vanilla-kube-state-metrics.yaml
+	helm template kube-state-metrics stable/kube-state-metrics --version=${KUBE_STATE_METRICS} > vanillas/vanilla-kube-state-metrics.yaml
 
 .PHONY: prometheus-node-exporter
 prometheus-node-exporter: docker-kustomize-prometheus-node-exporter docker-vanilla-prometheus-node-exporter
@@ -26,12 +29,12 @@ kustomize-prometheus-node-exporter: prometheus-node-exporter-template prometheus
 
 .PHONY: prometheus-node-exporter-template
 prometheus-node-exporter-template:
-	helm template prometheus-node-exporter stable/prometheus-node-exporter --output-dir .
+	helm template prometheus-node-exporter stable/prometheus-node-exporter --version=${NODE_EXPORTER_VERSION} --output-dir .
 
 .PHONY: vanilla-prometheus-node-exporter
 vanilla-prometheus-node-exporter:
 	@mkdir -p vanillas
-	helm template prometheus-node-exporter stable/prometheus-node-exporter > vanillas/vanilla-prometheus-node-exporter.yaml
+	helm template prometheus-node-exporter stable/prometheus-node-exporter --version=${NODE_EXPORTER_VERSION} > vanillas/vanilla-prometheus-node-exporter.yaml
 
 .SECONDEXPANSION:
 %-kustomization.yaml: $$(wildcard $$*/templates/*.yaml)
@@ -48,6 +51,8 @@ docker-%: .dockerimage
       run \
       --rm \
       -it \
+	  --env NODE_EXPORTER_VERSION=${NODE_EXPORTER_VERSION}\
+	  --env KUBE_STATE_METRICS=${KUBE_STATE_METRICS}\
       -v ${PWD}/:/workdir \
       manifests-builder \
 	  make $*
