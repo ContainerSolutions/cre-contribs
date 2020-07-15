@@ -51,8 +51,8 @@ docker-%: .dockerimage
       run \
       --rm \
       -it \
-	  --env NODE_EXPORTER_VERSION=${NODE_EXPORTER_VERSION}\
-	  --env KUBE_STATE_METRICS=${KUBE_STATE_METRICS}\
+      --env NODE_EXPORTER_VERSION=${NODE_EXPORTER_VERSION}\
+      --env KUBE_STATE_METRICS=${KUBE_STATE_METRICS}\
       -v ${PWD}/:/workdir \
       manifests-builder \
 	  make $*
