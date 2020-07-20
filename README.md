@@ -14,9 +14,9 @@ To build both exporters with the last helm charts version
 make
 ```
 
-For a fixed helm chart version set enviroment variables
+For a fixed helm chart version set the exporters version to the ones desied on the makefile
 
 ```bash
-export NODE_EXPORTER_VERSION=<version>
-export KUBE_STATE_METRICS=<version>
+NODE_EXPORTER_VERSION=<version>
+KUBE_STATE_METRICS=<version>
 ```
