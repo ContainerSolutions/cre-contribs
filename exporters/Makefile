@@ -1,9 +1,7 @@
-PWD                   = $(shell pwd)
-NODE_EXPORTER_VERSION = 1.11.1
+PWD                           = $(shell pwd)
+NODE_EXPORTER_VERSION         = 1.11.1
 KUBE_STATE_METRICS_VERSION    = 2.8.11
-RELEASE_CHANNEL = "stable"
-
-
+RELEASE_CHANNEL               = "stable"
 
 .PHONY: build
 build: kube-state-metrics-docker prometheus-node-exporter-docker
