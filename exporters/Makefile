@@ -40,9 +40,9 @@ prometheus-node-exporter: prometheus-node-exporter/vanilla-${NODE_EXPORTER_VERSI
 .PHONY: docker-%
 docker-%: .dockerimage
 	docker \
-      run \
-      --rm \
-      -it \
-      -v ${PWD}/:/workdir \
-      manifests-builder \
+	  run \
+	  --rm \
+	  -it \
+	  -v ${PWD}/:/workdir \
+	  manifests-builder \
 	  make $*
